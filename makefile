@@ -1,5 +1,3 @@
-# Makefile para ejecutar migraciones Flyway con Maven
-
 # Comando para ejecutar la migración
 db-migrate:
 	mvnw flyway:migrate -Dflyway.configFiles=flyway.conf
