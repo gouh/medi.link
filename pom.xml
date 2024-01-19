@@ -2,48 +2,83 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.1</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
+
 	<groupId>hangouh.me</groupId>
 	<artifactId>medi.link</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<name>medi.link</name>
 	<description>MediLink HealthCare System is a comprehensive digital solution designed to streamline healthcare management. This advanced system integrates key functionalities such as patient records, doctor appointments, medical histories, and prescription tracking. Focused on enhancing patient care and medical workflow efficiency, MediLink facilitates seamless interactions between patients and healthcare providers, ensuring accurate and swift access to health data. It&apos;s a pivotal tool in modernizing healthcare administration and improving overall service quality.</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.3.2</version>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-maven-plugin</artifactId>
+			<artifactId>flyway-core</artifactId>
 			<version>10.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+			<version>10.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.diffplug.spotless</groupId>
+			<artifactId>spotless-maven-plugin</artifactId>
+			<version>2.42.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -53,7 +88,51 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.5.0</version>
+				<configuration>
+					<configFiles>
+						<configFile>flyway.conf</configFile>
+					</configFiles>
+				</configuration>
+			</plugin>
+
+			<!-- https://javadoc.io/doc/com.diffplug.spotless/spotless-maven-plugin/2.42.0/index.html -->
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.42.0</version>
+				<inherited>true</inherited>
+				<configuration>
+					<java>
+						<!-- Cleanthat will refactor your code, but it may break your style: apply it before your formatter -->
+						<cleanthat />
+
+						<googleJavaFormat>
+							<!-- GOOGLE or AOSP (optional) -->
+							<!-- https://github.com/google/google-java-format -->
+							<style>GOOGLE</style>
+							<!-- optional (requires at least 1.8) -->
+							<reflowLongStrings>true</reflowLongStrings>
+						</googleJavaFormat>
+
+						<!-- standard import order -->
+						<importOrder/>
+
+						<!-- Removing unused imports at the top of each file. -->
+						<removeUnusedImports/>
+
+						<!-- Fixes formatting of type annotations that may have occurred earlier in the formatting process. -->
+						<formatAnnotations/>
+
+						<endWithNewline/>
+					</java>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
