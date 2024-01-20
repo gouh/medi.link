@@ -1,6 +1,7 @@
 package hangouh.me.medi.link.v1.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,17 +21,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Entity
 @Table(name = "medical_history")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "historyId")
 public class MedicalHistory {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "history_id")
   private UUID historyId;
-
-  @OneToOne()
-  @JoinColumn(name = "patient_id")
-  @JsonBackReference
-  private Patient patient;
 
   @Column(name = "disease_history")
   private String diseaseHistory;
@@ -48,6 +45,10 @@ public class MedicalHistory {
   @Column(name = "updated_at", nullable = false)
   @UpdateTimestamp
   private Date updatedAt;
+
+  @OneToOne()
+  @JoinColumn(name = "patient_id")
+  private Patient patient;
 
   public void setPatient(Patient patient) {
     this.patient = patient;

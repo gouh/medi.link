@@ -9,10 +9,13 @@ import lombok.Setter;
 @Setter
 public class DoctorFilterDTO extends PageableDTO {
   private UUID doctorId = null;
+
   @Size(max = 100)
   private String name = null;
+
   @Size(max = 255)
   private String specialty = null;
+
   @Size(max = 150)
   private String contactInfo = null;
 }
