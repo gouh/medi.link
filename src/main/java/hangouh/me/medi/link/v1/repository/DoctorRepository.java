@@ -1,7 +1,7 @@
 package hangouh.me.medi.link.v1.repository;
 
-import hangouh.me.medi.link.v1.DTO.requests.PatientFilterDTO;
-import hangouh.me.medi.link.v1.models.Patient;
+import hangouh.me.medi.link.v1.DTO.requests.DoctorFilterDTO;
+import hangouh.me.medi.link.v1.models.Doctor;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,26 +14,22 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PatientRepository
-    extends JpaRepository<Patient, UUID>, JpaSpecificationExecutor<Patient> {
-  default Page<Patient> findByFilters(PatientFilterDTO dto, Pageable pageable) {
-    Specification<Patient> spec =
+public interface DoctorRepository
+    extends JpaRepository<Doctor, UUID>, JpaSpecificationExecutor<Doctor> {
+  default Page<Doctor> findByFilters(DoctorFilterDTO dto, Pageable pageable) {
+    Specification<Doctor> spec =
         (root, query, criteriaBuilder) -> {
           List<Predicate> predicates = new ArrayList<>();
 
-          if (dto.getPatientId() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("patientId"), dto.getPatientId()));
+          if (dto.getDoctorId() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("doctorId"), dto.getDoctorId()));
           }
           if (dto.getName() != null && !dto.getName().trim().isEmpty()) {
             predicates.add(criteriaBuilder.like(root.get("name"), "%" + dto.getName() + "%"));
           }
-          if (dto.getDateOfBirth() != null) {
-            predicates.add(criteriaBuilder.equal(root.get("dateOfBirth"), dto.getDateOfBirth()));
-          }
-          if (dto.getGender() != null) {
+          if (dto.getSpecialty() != null && !dto.getSpecialty().trim().isEmpty()) {
             predicates.add(
-                criteriaBuilder.like(
-                    root.get("gender").as(String.class), "%" + dto.getGender() + "%"));
+                criteriaBuilder.like(root.get("specialty"), "%" + dto.getSpecialty() + "%"));
           }
           if (dto.getContactInfo() != null && !dto.getContactInfo().trim().isEmpty()) {
             predicates.add(
