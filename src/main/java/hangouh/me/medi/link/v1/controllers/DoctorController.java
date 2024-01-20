@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @V1ApiController
 public class DoctorController {
-
-  private static final String DOCTOR_NOT_FOUND = "Doctor not found";
+  public static final String DOCTOR_NOT_FOUND = "Doctor not found";
   private final DoctorRepository doctorRepository;
 
   @Autowired

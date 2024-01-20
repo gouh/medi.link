@@ -23,7 +23,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Entity
 @Table(name = "prescription")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "prescriptionId")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "prescriptionId")
 public class Prescription {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

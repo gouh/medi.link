@@ -1,7 +1,6 @@
 package hangouh.me.medi.link.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,12 +40,12 @@ public class Appointment {
   @UpdateTimestamp
   private Date updatedAt;
 
-  @ManyToOne(cascade = CascadeType.ALL, targetEntity = Patient.class)
+  @ManyToOne()
   @JoinColumn(name = "patient_id")
   @JsonBackReference
   private Patient patient;
 
-  @ManyToOne(cascade = CascadeType.ALL, targetEntity = Doctor.class)
+  @ManyToOne()
   @JoinColumn(name = "doctor_id")
   @JsonBackReference
   private Doctor doctor;

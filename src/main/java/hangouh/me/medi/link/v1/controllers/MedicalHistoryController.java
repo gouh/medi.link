@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @V1ApiController
 public class MedicalHistoryController {
+  public static final String MEDICAL_HISTORY_NOT_FOUND = "Medical history not found";
   private final MedicalHistoryRepository medicalHistoryRepository;
   private final PatientRepository patientRepository;
 
@@ -55,8 +56,7 @@ public class MedicalHistoryController {
             () ->
                 ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(
-                        new ResponseDTO<>(
-                            HttpStatus.NOT_FOUND, "Medical history not found", null)));
+                        new ResponseDTO<>(HttpStatus.NOT_FOUND, MEDICAL_HISTORY_NOT_FOUND, null)));
   }
 
   @PostMapping("/medical-histories")
@@ -74,7 +74,7 @@ public class MedicalHistoryController {
           .body(new ResponseDTO<>(HttpStatus.CREATED, "", savedMedicalHistory));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body(new ResponseDTO<>(HttpStatus.NOT_FOUND, "Patient not found", null));
+          .body(new ResponseDTO<>(HttpStatus.NOT_FOUND, PatientController.PATIENT_NOT_FOUND, null));
     }
   }
 
@@ -103,11 +103,13 @@ public class MedicalHistoryController {
                             ResponseEntity.status(HttpStatus.NOT_FOUND)
                                 .body(
                                     new ResponseDTO<>(
-                                        HttpStatus.NOT_FOUND, "Medical history not found", null))))
+                                        HttpStatus.NOT_FOUND, MEDICAL_HISTORY_NOT_FOUND, null))))
         .orElseGet(
             () ->
                 ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResponseDTO<>(HttpStatus.NOT_FOUND, "Patient not found", null)));
+                    .body(
+                        new ResponseDTO<>(
+                            HttpStatus.NOT_FOUND, PatientController.PATIENT_NOT_FOUND, null)));
   }
 
   @DeleteMapping("/medical-histories/{id}")
@@ -126,7 +128,7 @@ public class MedicalHistoryController {
           .body(new ResponseDTO<>(HttpStatus.NO_CONTENT, "", null));
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body(new ResponseDTO<>(HttpStatus.NOT_FOUND, "Medical history not found", null));
+          .body(new ResponseDTO<>(HttpStatus.NOT_FOUND, MEDICAL_HISTORY_NOT_FOUND, null));
     }
   }
 }

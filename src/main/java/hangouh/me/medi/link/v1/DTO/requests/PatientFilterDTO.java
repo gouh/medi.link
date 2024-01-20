@@ -10,16 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PatientFilterDTO extends PageableDTO {
-  private UUID patientId = null;
+  private UUID patientId;
 
   @Size(max = 100)
-  private String name = null;
+  private String name;
 
   private Date dateOfBirth;
 
-  @Pattern(regexp = "[MF]")
-  private Character gender = null;
+  @Pattern(regexp = "[M,F]")
+  private String gender;
 
   @Size(max = 255)
-  private String contactInfo = null;
+  private String contactInfo;
 }
