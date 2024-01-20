@@ -1,6 +1,8 @@
 package hangouh.me.medi.link.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +23,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Entity
 @Table(name = "prescription")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "prescriptionId")
 public class Prescription {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

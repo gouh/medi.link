@@ -1,7 +1,9 @@
 package hangouh.me.medi.link.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +26,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Entity
 @Table(name = "patient")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "patientId")
 public class Patient {
 
   @Id
@@ -53,7 +56,6 @@ public class Patient {
   private Date updatedAt;
 
   @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-  @JsonManagedReference
   private MedicalHistory medicalHistory;
 
   @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
