@@ -15,6 +15,11 @@ flyway.locations=filesystem:src/main/resources/db/migrations
 flyway.cleanDisabled=false
 ```
 
+## Code Format
+
+The project include a formatter from [google-java-format](https://github.com/google/google-java-format), the config for your [idea](https://github.com/google/google-java-format/blob/master/README.md#intellij-jre-config).
+
+
 ## Makefile Commands
 
 The project includes a `Makefile` for easy management of database migrations:
@@ -25,6 +30,7 @@ The project includes a `Makefile` for easy management of database migrations:
 - **db-validate**: Validates the database migrations.
 - **db-info**: Displays information about the migration status.
 - **db-create-migration**: Creates a new migration file with a given name and timestamp. Usage: `make db-create-migration NAME="migration_name"`.
+- **code-format**: Format the code of the project
 
 ## Spring Boot Configuration
 
@@ -40,7 +46,7 @@ spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 spring.jpa.show-sql=true
 
 # Hibernate dialect for MariaDB
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDB103Dialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
 ```
 
 ## Requirements
