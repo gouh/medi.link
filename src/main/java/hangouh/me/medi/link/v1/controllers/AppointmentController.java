@@ -7,10 +7,10 @@ import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.Appointment;
 import hangouh.me.medi.link.v1.models.Doctor;
 import hangouh.me.medi.link.v1.models.Patient;
-import hangouh.me.medi.link.v1.repository.AppointmentRepository;
-import hangouh.me.medi.link.v1.repository.DoctorRepository;
-import hangouh.me.medi.link.v1.repository.PatientRepository;
-import hangouh.me.medi.link.v1.utls.RequestUtils;
+import hangouh.me.medi.link.v1.repositories.AppointmentRepository;
+import hangouh.me.medi.link.v1.repositories.DoctorRepository;
+import hangouh.me.medi.link.v1.repositories.PatientRepository;
+import hangouh.me.medi.link.v1.utils.RequestUtil;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,7 +43,7 @@ public class AppointmentController {
   @GetMapping("/appointments")
   public ResponseEntity<ResponsePageDTO<Appointment>> getAllAppointments(
       AppointmentFilterDTO filterDTO) {
-    Sort sort = RequestUtils.buildSort(filterDTO.getSortBy());
+    Sort sort = RequestUtil.buildSort(filterDTO.getSortBy());
     PageRequest pageRequest = PageRequest.of(filterDTO.getPage(), filterDTO.getSize(), sort);
     Page<Appointment> appointmentsPage =
         appointmentRepository.findByFilters(filterDTO, pageRequest);
