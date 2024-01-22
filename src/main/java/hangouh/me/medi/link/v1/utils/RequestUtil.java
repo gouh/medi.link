@@ -1,10 +1,10 @@
-package hangouh.me.medi.link.v1.utls;
+package hangouh.me.medi.link.v1.utils;
 
 import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.data.domain.Sort;
 
-public class RequestUtils {
+public class RequestUtil {
 
   /**
    * Get a sort for a get

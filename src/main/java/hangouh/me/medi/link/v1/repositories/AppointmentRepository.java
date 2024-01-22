@@ -1,4 +1,4 @@
-package hangouh.me.medi.link.v1.repository;
+package hangouh.me.medi.link.v1.repositories;
 
 import hangouh.me.medi.link.v1.DTO.requests.AppointmentFilterDTO;
 import hangouh.me.medi.link.v1.models.Appointment;

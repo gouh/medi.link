@@ -6,9 +6,9 @@ import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.MedicalHistory;
 import hangouh.me.medi.link.v1.models.Patient;
-import hangouh.me.medi.link.v1.repository.MedicalHistoryRepository;
-import hangouh.me.medi.link.v1.repository.PatientRepository;
-import hangouh.me.medi.link.v1.utls.RequestUtils;
+import hangouh.me.medi.link.v1.repositories.MedicalHistoryRepository;
+import hangouh.me.medi.link.v1.repositories.PatientRepository;
+import hangouh.me.medi.link.v1.utils.RequestUtil;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class MedicalHistoryController {
   @GetMapping("/medical-histories")
   public ResponseEntity<ResponsePageDTO<MedicalHistory>> getAllMedicalHistories(
       @Valid MedicalHistoryFilterDTO dto) {
-    Sort sort = RequestUtils.buildSort(dto.getSortBy());
+    Sort sort = RequestUtil.buildSort(dto.getSortBy());
     Pageable pageable = PageRequest.of(dto.getPage(), dto.getSize(), sort);
     Page<MedicalHistory> medicalHistories = medicalHistoryRepository.findByFilters(dto, pageable);
     return ResponseEntity.ok(new ResponsePageDTO<>(HttpStatus.OK, "", medicalHistories));

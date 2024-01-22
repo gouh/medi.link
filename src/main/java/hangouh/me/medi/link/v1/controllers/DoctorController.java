@@ -5,8 +5,8 @@ import hangouh.me.medi.link.v1.DTO.requests.DoctorFilterDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.Doctor;
-import hangouh.me.medi.link.v1.repository.DoctorRepository;
-import hangouh.me.medi.link.v1.utls.RequestUtils;
+import hangouh.me.medi.link.v1.repositories.DoctorRepository;
+import hangouh.me.medi.link.v1.utils.RequestUtil;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class DoctorController {
 
   @GetMapping("/doctors")
   public ResponseEntity<ResponsePageDTO<Doctor>> getAllDoctors(@Valid DoctorFilterDTO dto) {
-    Sort sort = RequestUtils.buildSort(dto.getSortBy());
+    Sort sort = RequestUtil.buildSort(dto.getSortBy());
     Pageable pageable = PageRequest.of(dto.getPage(), dto.getSize(), sort);
     Page<Doctor> doctors = doctorRepository.findByFilters(dto, pageable);
     return ResponseEntity.ok(new ResponsePageDTO<>(HttpStatus.OK, "", doctors));
