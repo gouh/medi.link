@@ -1,16 +1,10 @@
 package hangouh.me.medi.link.v1.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,20 +19,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "doctor")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "doctorId")
-public class Doctor {
+public class Doctor extends Person {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "doctor_id")
   private UUID doctorId;
 
-  @Column(name = "name")
-  private String name;
-
   @Column(name = "specialty")
   private String specialty;
-
-  @Column(name = "contact_info")
-  private String contactInfo;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -56,6 +44,11 @@ public class Doctor {
   @JsonManagedReference
   private List<Appointment> appointments = new ArrayList<>();
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id")
+  @JsonBackReference
+  private User user;
+
   public void addPrescription(Prescription prescription) {
     prescriptions.add(prescription);
     if (prescription.getDoctor() != this) {
@@ -67,6 +60,13 @@ public class Doctor {
     appointments.add(appointment);
     if (appointment.getDoctor() != this) {
       appointment.setDoctor(this);
+    }
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+    if (user != null && user.getDoctor() != this) {
+      user.setDoctor(this);
     }
   }
 }

@@ -50,6 +50,11 @@ public class Appointment {
   @JsonBackReference
   private Doctor doctor;
 
+  @ManyToOne()
+  @JoinColumn(name = "assistant_id")
+  @JsonBackReference
+  private Assistant assistant;
+
   public void setPatient(Patient patient) {
     this.patient = patient;
     if (patient != null && !patient.getAppointments().contains(this)) {
@@ -61,6 +66,13 @@ public class Appointment {
     this.doctor = doctor;
     if (doctor != null && !doctor.getAppointments().contains(this)) {
       doctor.addAppointment(this);
+    }
+  }
+
+  public void setAssistant(Assistant assistant) {
+    this.assistant = assistant;
+    if (assistant != null && !assistant.getAppointments().contains(this)) {
+      assistant.addAppointment(this);
     }
   }
 }

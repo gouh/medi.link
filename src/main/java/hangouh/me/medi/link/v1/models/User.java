@@ -21,9 +21,6 @@ public class User {
   @Column(name = "user_id")
   private UUID userId;
 
-  @Column(name = "name")
-  private String name;
-
   @Column(nullable = false, unique = true, name = "username")
   private String username;
 
@@ -41,4 +38,34 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
   @JsonIgnore
   private List<Role> roles;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Patient patient;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Doctor doctor;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Assistant assistant;
+
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+    if (patient != null && patient.getUser() != this) {
+      patient.setUser(this);
+    }
+  }
+
+  public void setDoctor(Doctor doctor) {
+    this.doctor = doctor;
+    if (doctor != null && doctor.getUser() != this) {
+      doctor.setUser(this);
+    }
+  }
+
+  public void setAssistant(Assistant assistant) {
+    this.assistant = assistant;
+    if (assistant != null && assistant.getUser() != this) {
+      assistant.setUser(this);
+    }
+  }
 }

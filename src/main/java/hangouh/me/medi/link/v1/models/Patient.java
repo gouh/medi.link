@@ -1,18 +1,7 @@
 package hangouh.me.medi.link.v1.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,15 +16,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "patient")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "patientId")
-public class Patient {
+public class Patient extends Person {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "patient_id")
   private UUID patientId;
-
-  @Column(name = "name")
-  private String name;
 
   @Column(name = "date_of_birth")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -43,9 +29,6 @@ public class Patient {
 
   @Column(name = "gender")
   private char gender;
-
-  @Column(name = "contact_info")
-  private String contactInfo;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -66,6 +49,11 @@ public class Patient {
   @JsonManagedReference
   private List<Appointment> appointments = new ArrayList<>();
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id")
+  @JsonBackReference
+  private User user;
+
   public void setMedicalHistory(MedicalHistory medicalHistory) {
     this.medicalHistory = medicalHistory;
     if (medicalHistory != null && medicalHistory.getPatient() != this) {
@@ -84,6 +72,13 @@ public class Patient {
     appointments.add(appointment);
     if (appointment.getPatient() != this) {
       appointment.setPatient(this);
+    }
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+    if (user != null && user.getPatient() != this) {
+      user.setPatient(this);
     }
   }
 }
