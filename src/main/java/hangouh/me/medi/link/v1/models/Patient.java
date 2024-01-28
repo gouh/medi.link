@@ -17,7 +17,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "patient")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "patientId")
 public class Patient extends Person {
-
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "patient_id")
@@ -48,11 +47,6 @@ public class Patient extends Person {
   @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private List<Appointment> appointments = new ArrayList<>();
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "user_id")
-  @JsonBackReference
-  private User user;
 
   public void setMedicalHistory(MedicalHistory medicalHistory) {
     this.medicalHistory = medicalHistory;

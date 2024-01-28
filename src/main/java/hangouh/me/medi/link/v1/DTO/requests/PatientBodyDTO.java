@@ -1,6 +1,8 @@
 package hangouh.me.medi.link.v1.DTO.requests;
 
 import hangouh.me.medi.link.v1.models.Patient;
+import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,25 +19,29 @@ public class PatientBodyDTO {
   @Size(max = 100)
   private String name;
 
-  @NotNull @NotEmpty
-  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+  @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private Date dob;
 
+  @NotNull @NotEmpty
   @Pattern(regexp = "[M,F]")
-  private char gender;
+  private String gender;
 
   @NotNull @NotEmpty
   @Size(max = 150)
   private String contactInfo;
 
-  private UserBodyDTO user;
+  @Nullable @Valid private UserBodyDTO user;
 
   public Patient toPatient() {
     Patient patient = new Patient();
     patient.setName(this.name);
     patient.setDob(this.dob);
-    patient.setGender(this.gender);
+    patient.setGender(this.getGender());
     patient.setContactInfo(this.contactInfo);
     return patient;
+  }
+
+  public char getGender() {
+    return gender.charAt(0);
   }
 }

@@ -1,6 +1,8 @@
 package hangouh.me.medi.link.v1.controllers.exceptions;
 
 import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
+import hangouh.me.medi.link.v1.utils.ResponseUtil;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -54,15 +56,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
               String message = error.getDefaultMessage();
               errors.put(fieldName, message);
             });
-    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+
+    return new ResponseEntity<>(
+        new ResponseDTO<>(HttpStatus.BAD_REQUEST, "MethodArgumentNotValid", errors),
+        HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
   public ResponseEntity<ResponseDTO<String>> handleDataIntegrityViolation(
       DataIntegrityViolationException ex) {
-    return new ResponseEntity<>(
-        new ResponseDTO<>(
-            HttpStatus.CONFLICT, Objects.requireNonNull(ex.getRootCause()).getMessage(), null),
-        HttpStatus.CONFLICT);
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.CONFLICT, Objects.requireNonNull(ex.getRootCause()).getMessage());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ResponseDTO<String>> handleIllegalArgumentException(
+      DataIntegrityViolationException ex) {
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.BAD_REQUEST, Objects.requireNonNull(ex.getRootCause()).getMessage());
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ResponseDTO<String>> handleEntityNotFoundException(
+      EntityNotFoundException ex) {
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.BAD_REQUEST, Objects.requireNonNull(ex.getMessage()));
   }
 }

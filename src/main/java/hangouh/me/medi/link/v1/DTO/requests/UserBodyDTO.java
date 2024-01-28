@@ -27,7 +27,7 @@ public class UserBodyDTO {
   @Size(max = 255)
   private String password;
 
-  private List<@Size(min = 1, max = 30) String> roles;
+  @NotEmpty private List<@Size(min = 1, max = 30) String> roles;
 
   public User toUser(List<Role> roles) {
     User user = new User();

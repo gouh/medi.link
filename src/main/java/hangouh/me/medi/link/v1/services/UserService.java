@@ -1,6 +1,7 @@
 package hangouh.me.medi.link.v1.services;
 
 import hangouh.me.medi.link.v1.DTO.requests.UserBodyDTO;
+import hangouh.me.medi.link.v1.models.Person;
 import hangouh.me.medi.link.v1.models.Role;
 import hangouh.me.medi.link.v1.models.User;
 import hangouh.me.medi.link.v1.repositories.RoleRepository;
@@ -20,7 +21,14 @@ public class UserService {
   private RoleRepository roleRepository;
   private PasswordEncoder passwordEncoder;
 
-  public User upserUser(@Nullable UserBodyDTO dto, @Nullable UUID userID) {
+  public void updateUserForPerson(Person person, UserBodyDTO userDTO) {
+    if (userDTO != null) {
+      person.setUser(
+          this.upsertUser(userDTO, person.getUser() != null ? person.getUser().getUserId() : null));
+    }
+  }
+
+  public User upsertUser(@Nullable UserBodyDTO dto, @Nullable UUID userID) {
     if (dto == null) {
       return null;
     }

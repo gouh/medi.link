@@ -1,7 +1,7 @@
 package hangouh.me.medi.link.v1.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +14,9 @@ public class Person {
 
   @Column(name = "contact_info")
   private String contactInfo;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id")
+  @JsonIgnoreProperties(value = {"password"})
+  protected User user;
 }
