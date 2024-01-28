@@ -14,11 +14,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterBodyDTO {
-  @NotNull @NotEmpty
-  @Size(max = 255)
-  private String name;
-
+public class UserBodyDTO {
   @NotNull @NotEmpty
   @Size(max = 255)
   private String username;
@@ -35,7 +31,6 @@ public class RegisterBodyDTO {
 
   public User toUser(List<Role> roles) {
     User user = new User();
-    user.setName(this.name);
     user.setUsername(this.username);
     user.setEmail(this.email);
     user.setPassword(this.password);

@@ -3,8 +3,10 @@ package hangouh.me.medi.link.v1.controllers.exceptions;
 import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +16,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -52,5 +55,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
               errors.put(fieldName, message);
             });
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ResponseDTO<String>> handleDataIntegrityViolation(
+      DataIntegrityViolationException ex) {
+    return new ResponseEntity<>(
+        new ResponseDTO<>(
+            HttpStatus.CONFLICT, Objects.requireNonNull(ex.getRootCause()).getMessage(), null),
+        HttpStatus.CONFLICT);
   }
 }
