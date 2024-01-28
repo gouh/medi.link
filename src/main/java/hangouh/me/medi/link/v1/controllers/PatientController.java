@@ -6,6 +6,7 @@ import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.Patient;
 import hangouh.me.medi.link.v1.repositories.PatientRepository;
+import hangouh.me.medi.link.v1.services.UserService;
 import hangouh.me.medi.link.v1.utils.RequestUtil;
 import jakarta.validation.Valid;
 import java.util.*;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.*;
 public class PatientController {
   public static final String PATIENT_NOT_FOUND = "Patient not found";
   private final PatientRepository patientRepository;
+  private final UserService userService;
 
   @Autowired
-  public PatientController(PatientRepository patientRepository) {
+  public PatientController(PatientRepository patientRepository, UserService userService) {
     this.patientRepository = patientRepository;
+    this.userService = userService;
   }
 
   @GetMapping("/patients")
@@ -51,6 +54,9 @@ public class PatientController {
   @PostMapping("/patients")
   public ResponseEntity<ResponseDTO<Patient>> create(@RequestBody PatientBodyDTO patientDTO) {
     Patient patient = patientDTO.toPatient();
+    if (patientDTO.getUser() != null) {
+      patient.setUser(this.userService.upserUser(patientDTO.getUser(), null));
+    }
     this.patientRepository.save(patient);
     ResponseDTO<Patient> response = new ResponseDTO<>(HttpStatus.CREATED, "", patient);
     return ResponseEntity.status(response.getMetadata().getStatusCode()).body(response);
@@ -68,6 +74,10 @@ public class PatientController {
       patient.setDob(patientDTO.getDob());
       patient.setGender(patientDTO.getGender());
       patient.setContactInfo(patientDTO.getContactInfo());
+      if (patient.getUser() != null && patientDTO.getUser() != null) {
+        patient.setUser(
+            this.userService.upserUser(patientDTO.getUser(), patient.getUser().getUserId()));
+      }
       this.patientRepository.save(patient);
       response = new ResponseDTO<>(HttpStatus.OK, "", patient);
     }
