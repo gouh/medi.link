@@ -6,6 +6,7 @@ import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.Doctor;
 import hangouh.me.medi.link.v1.repositories.DoctorRepository;
+import hangouh.me.medi.link.v1.services.UserService;
 import hangouh.me.medi.link.v1.utils.RequestUtil;
 import jakarta.validation.Valid;
 import java.util.*;
@@ -23,10 +24,12 @@ import org.springframework.web.bind.annotation.*;
 public class DoctorController {
   public static final String DOCTOR_NOT_FOUND = "Doctor not found";
   private final DoctorRepository doctorRepository;
+  private final UserService userService;
 
   @Autowired
-  public DoctorController(DoctorRepository doctorRepository) {
+  public DoctorController(DoctorRepository doctorRepository, UserService userService) {
     this.doctorRepository = doctorRepository;
+    this.userService = userService;
   }
 
   @GetMapping("/doctors")
@@ -55,6 +58,9 @@ public class DoctorController {
   public ResponseEntity<ResponseDTO<Doctor>> createDoctor(
       @Valid @RequestBody DoctorBodyDTO doctorDTO) {
     Doctor doctor = doctorDTO.toDoctor();
+    if (doctorDTO.getUser() != null) {
+      doctor.setUser(this.userService.upserUser(doctorDTO.getUser(), null));
+    }
     Doctor savedDoctor = doctorRepository.save(doctor);
     return new ResponseEntity<>(
         new ResponseDTO<>(HttpStatus.CREATED, "", savedDoctor), HttpStatus.CREATED);
@@ -70,6 +76,10 @@ public class DoctorController {
               doctor.setName(doctorDTO.getName());
               doctor.setSpecialty(doctorDTO.getSpecialty());
               doctor.setContactInfo(doctorDTO.getContactInfo());
+              if (doctor.getUser() != null && doctor.getUser() != null) {
+                doctor.setUser(
+                    this.userService.upserUser(doctorDTO.getUser(), doctor.getUser().getUserId()));
+              }
               Doctor updatedDoctor = doctorRepository.save(doctor);
               return new ResponseEntity<>(
                   new ResponseDTO<>(HttpStatus.OK, "", updatedDoctor), HttpStatus.OK);
