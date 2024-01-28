@@ -10,18 +10,15 @@ import lombok.Setter;
 @Setter
 @Getter
 public class DoctorBodyDTO {
-  @NotNull
-  @NotEmpty
+  @NotNull @NotEmpty
   @Size(max = 100)
   private String name;
 
-  @NotNull
-  @NotEmpty
+  @NotNull @NotEmpty
   @Size(max = 255)
   private String specialty;
 
-  @NotNull
-  @NotEmpty
+  @NotNull @NotEmpty
   @Size(max = 150)
   private String contactInfo;
 
