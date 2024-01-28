@@ -76,7 +76,7 @@ public class DoctorController {
               doctor.setName(doctorDTO.getName());
               doctor.setSpecialty(doctorDTO.getSpecialty());
               doctor.setContactInfo(doctorDTO.getContactInfo());
-              if (doctor.getUser() != null && doctor.getUser() != null) {
+              if (doctorDTO.getUser() != null && doctor.getUser() != null) {
                 doctor.setUser(
                     this.userService.upserUser(doctorDTO.getUser(), doctor.getUser().getUserId()));
               }
