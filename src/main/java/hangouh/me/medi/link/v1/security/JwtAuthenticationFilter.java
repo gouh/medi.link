@@ -1,4 +1,4 @@
-package hangouh.me.medi.link.security;
+package hangouh.me.medi.link.v1.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

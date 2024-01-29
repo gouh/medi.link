@@ -1,4 +1,4 @@
-package hangouh.me.medi.link.security;
+package hangouh.me.medi.link.v1.security;
 
 import hangouh.me.medi.link.v1.services.UserDetailsService;
 import lombok.AllArgsConstructor;
