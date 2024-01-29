@@ -31,6 +31,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(
             request -> {
               request.requestMatchers("/auth/**").permitAll();
+              request.requestMatchers("/docs/**").permitAll();
+              request.requestMatchers("/docs.**").permitAll();
               request.requestMatchers("/v1/health").permitAll();
               request.requestMatchers("/v1/**").authenticated();
             })

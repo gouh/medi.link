@@ -153,6 +153,14 @@
             <scope>runtime</scope>
         </dependency>
         <!-- JWT -->
+        <!-- Documentation -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <!-- Documentation -->
+
     </dependencies>
 
     <build>
