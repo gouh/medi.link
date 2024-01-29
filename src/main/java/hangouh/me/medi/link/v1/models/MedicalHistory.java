@@ -1,15 +1,11 @@
 package hangouh.me.medi.link.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.UUID;
 import lombok.Getter;
@@ -46,8 +42,10 @@ public class MedicalHistory {
   @UpdateTimestamp
   private Date updatedAt;
 
-  @OneToOne()
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
   @JoinColumn(name = "patient_id")
+  @JsonManagedReference
+  @JsonIgnoreProperties(value = {"prescriptions", "appointments", "medicalHistory", "user"})
   private Patient patient;
 
   public void setPatient(Patient patient) {

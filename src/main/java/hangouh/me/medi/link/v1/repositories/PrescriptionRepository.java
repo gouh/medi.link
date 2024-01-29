@@ -1,7 +1,7 @@
 package hangouh.me.medi.link.v1.repositories;
 
-import hangouh.me.medi.link.v1.DTO.requests.AppointmentFilterDTO;
-import hangouh.me.medi.link.v1.models.Appointment;
+import hangouh.me.medi.link.v1.DTO.requests.PrescriptionFilterDTO;
+import hangouh.me.medi.link.v1.models.Prescription;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +12,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface AppointmentRepository
-    extends JpaRepository<Appointment, UUID>, JpaSpecificationExecutor<Appointment> {
-  default Page<Appointment> findByFilters(AppointmentFilterDTO filterDTO, Pageable pageable) {
+public interface PrescriptionRepository
+    extends JpaRepository<Prescription, UUID>, JpaSpecificationExecutor<Prescription> {
+  default Page<Prescription> findByFilters(PrescriptionFilterDTO filterDTO, Pageable pageable) {
     return findAll(
-        (Specification<Appointment>)
+        (Specification<Prescription>)
             (root, query, criteriaBuilder) -> {
               List<Predicate> predicates = new ArrayList<>();
-
-              if (filterDTO.getAssistantId() != null) {
-                predicates.add(
-                    criteriaBuilder.equal(
-                        root.get("patient").get("assistantId"), filterDTO.getAssistantId()));
-              }
               if (filterDTO.getPatientId() != null) {
                 predicates.add(
                     criteriaBuilder.equal(
@@ -35,23 +29,22 @@ public interface AppointmentRepository
                     criteriaBuilder.equal(
                         root.get("doctor").get("doctorId"), filterDTO.getDoctorId()));
               }
-              if (filterDTO.getConsultationReason() != null
-                  && !filterDTO.getConsultationReason().isEmpty()) {
+              if (filterDTO.getPrescribedMedication() != null
+                  && !filterDTO.getPrescribedMedication().isEmpty()) {
                 predicates.add(
                     criteriaBuilder.like(
-                        root.get("consultationReason"),
-                        "%" + filterDTO.getConsultationReason() + "%"));
+                        root.get("prescribed_medication"),
+                        "%" + filterDTO.getPrescribedMedication() + "%"));
               }
-              if (filterDTO.getFromDate() != null) {
+              if (filterDTO.getDosage() != null && !filterDTO.getDosage().isEmpty()) {
                 predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(
-                        root.get("dateTime"), filterDTO.getFromDate()));
+                    criteriaBuilder.like(root.get("dosage"), "%" + filterDTO.getDosage() + "%"));
               }
-              if (filterDTO.getToDate() != null) {
+              if (filterDTO.getDuration() != null && !filterDTO.getDuration().isEmpty()) {
                 predicates.add(
-                    criteriaBuilder.lessThanOrEqualTo(root.get("dateTime"), filterDTO.getToDate()));
+                    criteriaBuilder.like(
+                        root.get("duration"), "%" + filterDTO.getDuration() + "%"));
               }
-
               return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             },
         pageable);

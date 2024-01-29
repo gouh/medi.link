@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Getter
 @Setter
 public class AppointmentFilterDTO extends PageableDTO {
+  private UUID assistantId;
   private UUID patientId;
   private UUID doctorId;
 
