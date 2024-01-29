@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 public interface DoctorService {
   /**
-   * Get list of assistants with filters using criteria
+   * Get list of doctors with filters using criteria
    *
    * @param filters criteria
    * @return Pagination
@@ -16,37 +16,37 @@ public interface DoctorService {
   Page<Doctor> getAll(DoctorFilterDTO filters);
 
   /**
-   * Get assistant by id
+   * Get doctor by id
    *
    * @param id Doctor id
    * @return Doctor
-   * @throws jakarta.persistence.EntityNotFoundException When assistant not found
+   * @throws jakarta.persistence.EntityNotFoundException When doctor not found
    */
   Doctor getById(UUID id);
 
   /**
-   * Create assistant by DTO
+   * Create doctor by DTO
    *
-   * @param assistant data
+   * @param doctor data
    * @return Doctor
    */
-  Doctor create(DoctorBodyDTO assistant);
+  Doctor create(DoctorBodyDTO doctor);
 
   /**
-   * Update assistant by DTO and id
+   * Update doctor by DTO and id
    *
-   * @param id assistant id
-   * @param assistant data
+   * @param id doctor id
+   * @param doctor data
    * @return Doctor
-   * @throws jakarta.persistence.EntityNotFoundException When assistant not found
+   * @throws jakarta.persistence.EntityNotFoundException When doctor not found
    */
-  Doctor update(UUID id, DoctorBodyDTO assistant);
+  Doctor update(UUID id, DoctorBodyDTO doctor);
 
   /**
-   * Delete assistant by id
+   * Delete doctor by id
    *
    * @param id data
-   * @throws jakarta.persistence.EntityNotFoundException When assistant not found
+   * @throws jakarta.persistence.EntityNotFoundException When doctor not found
    */
   void delete(UUID id);
 }
