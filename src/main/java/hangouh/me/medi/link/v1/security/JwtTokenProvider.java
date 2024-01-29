@@ -1,4 +1,4 @@
-package hangouh.me.medi.link.security;
+package hangouh.me.medi.link.v1.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

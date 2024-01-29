@@ -27,15 +27,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "patient")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "patientId")
-public class Patient {
-
+public class Patient extends Person {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "patient_id")
   private UUID patientId;
-
-  @Column(name = "name")
-  private String name;
 
   @Column(name = "date_of_birth")
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -43,9 +39,6 @@ public class Patient {
 
   @Column(name = "gender")
   private char gender;
-
-  @Column(name = "contact_info")
-  private String contactInfo;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -84,6 +77,13 @@ public class Patient {
     appointments.add(appointment);
     if (appointment.getPatient() != this) {
       appointment.setPatient(this);
+    }
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+    if (user != null && user.getPatient() != this) {
+      user.setPatient(this);
     }
   }
 }

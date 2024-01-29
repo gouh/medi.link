@@ -1,4 +1,4 @@
-package hangouh.me.medi.link.security;
+package hangouh.me.medi.link.v1.security;
 
 import hangouh.me.medi.link.v1.services.UserDetailsService;
 import lombok.AllArgsConstructor;
@@ -31,6 +31,8 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(
             request -> {
               request.requestMatchers("/auth/**").permitAll();
+              request.requestMatchers("/docs/**").permitAll();
+              request.requestMatchers("/docs.**").permitAll();
               request.requestMatchers("/v1/health").permitAll();
               request.requestMatchers("/v1/**").authenticated();
             })

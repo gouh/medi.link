@@ -1,10 +1,14 @@
 package hangouh.me.medi.link.v1.controllers.exceptions;
 
 import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
+import hangouh.me.medi.link.v1.utils.ResponseUtil;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -51,6 +56,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
               String message = error.getDefaultMessage();
               errors.put(fieldName, message);
             });
-    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+
+    return new ResponseEntity<>(
+        new ResponseDTO<>(HttpStatus.BAD_REQUEST, "MethodArgumentNotValid", errors),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ResponseDTO<String>> handleDataIntegrityViolation(
+      DataIntegrityViolationException ex) {
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.CONFLICT, Objects.requireNonNull(ex.getRootCause()).getMessage());
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ResponseDTO<String>> handleIllegalArgumentException(
+      DataIntegrityViolationException ex) {
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.BAD_REQUEST, Objects.requireNonNull(ex.getRootCause()).getMessage());
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<ResponseDTO<String>> handleEntityNotFoundException(
+      EntityNotFoundException ex) {
+    return ResponseUtil.createResponseEntity(
+        null, HttpStatus.BAD_REQUEST, Objects.requireNonNull(ex.getMessage()));
   }
 }

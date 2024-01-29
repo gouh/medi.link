@@ -1,6 +1,6 @@
 package hangouh.me.medi.link.v1.services;
 
-import hangouh.me.medi.link.security.JwtTokenProvider;
+import hangouh.me.medi.link.v1.security.JwtTokenProvider;
 import hangouh.me.medi.link.v1.DTO.requests.JwtRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

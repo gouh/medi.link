@@ -1,7 +1,18 @@
 package hangouh.me.medi.link.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -21,9 +32,6 @@ public class User {
   @Column(name = "user_id")
   private UUID userId;
 
-  @Column(name = "name")
-  private String name;
-
   @Column(nullable = false, unique = true, name = "username")
   private String username;
 
@@ -34,11 +42,46 @@ public class User {
   @JsonIgnore
   private String password;
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToMany(
+      fetch = FetchType.EAGER,
+      cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(
       name = "users_roles",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
   @JsonIgnore
   private List<Role> roles;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
+  private Patient patient;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
+  private Doctor doctor;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
+  private Assistant assistant;
+
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+    if (patient != null && patient.getUser() != this) {
+      patient.setUser(this);
+    }
+  }
+
+  public void setDoctor(Doctor doctor) {
+    this.doctor = doctor;
+    if (doctor != null && doctor.getUser() != this) {
+      doctor.setUser(this);
+    }
+  }
+
+  public void setAssistant(Assistant assistant) {
+    this.assistant = assistant;
+    if (assistant != null && assistant.getUser() != this) {
+      assistant.setUser(this);
+    }
+  }
 }
