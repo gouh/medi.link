@@ -26,12 +26,12 @@ public class PatientController {
 
   @GetMapping("/patients")
   public ResponseEntity<ResponsePageDTO<Patient>> getAll(@Valid PatientFilterDTO dto) {
-    return ResponseUtil.createResponsePage(this.patientService.getAll(dto), HttpStatus.OK);
+    return ResponseUtil.createResponsePage(patientService.getAll(dto), HttpStatus.OK);
   }
 
   @GetMapping("/patients/{id}")
   public ResponseEntity<ResponseDTO<Patient>> getById(@PathVariable UUID id) {
-    Patient response = this.patientService.getById(id);
+    Patient response = patientService.getById(id);
     return ResponseUtil.createResponseEntity(response, HttpStatus.OK);
   }
 
@@ -44,8 +44,7 @@ public class PatientController {
   @PutMapping("/patients/{id}")
   public ResponseEntity<ResponseDTO<Patient>> update(
       @PathVariable UUID id, @Valid @RequestBody PatientBodyDTO patientDTO) {
-    return ResponseUtil.createResponseEntity(
-        this.patientService.update(id, patientDTO), HttpStatus.OK);
+    return ResponseUtil.createResponseEntity(patientService.update(id, patientDTO), HttpStatus.OK);
   }
 
   @DeleteMapping("/patients/{id}")

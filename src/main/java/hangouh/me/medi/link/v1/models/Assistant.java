@@ -1,6 +1,5 @@
 package hangouh.me.medi.link.v1.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -22,11 +21,6 @@ public class Assistant extends Person {
   @OneToMany(mappedBy = "assistant", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference
   private List<Appointment> appointments = new ArrayList<>();
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "user_id")
-  @JsonBackReference
-  private User user;
 
   public void addAppointment(Appointment appointment) {
     appointments.add(appointment);

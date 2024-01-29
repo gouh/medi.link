@@ -1,6 +1,8 @@
 package hangouh.me.medi.link.v1.DTO.requests;
 
 import hangouh.me.medi.link.v1.models.Assistant;
+import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,7 +24,7 @@ public class AssistantBodyDTO {
   @Size(max = 255)
   private String contactInfo;
 
-  private UserBodyDTO user;
+  @Nullable @Valid private UserBodyDTO user;
 
   public Assistant toAssistant() {
     Assistant assistant = new Assistant();
