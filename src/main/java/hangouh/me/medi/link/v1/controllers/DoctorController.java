@@ -5,16 +5,11 @@ import hangouh.me.medi.link.v1.DTO.requests.DoctorFilterDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponseDTO;
 import hangouh.me.medi.link.v1.DTO.responses.ResponsePageDTO;
 import hangouh.me.medi.link.v1.models.Doctor;
-import hangouh.me.medi.link.v1.repositories.DoctorRepository;
-import hangouh.me.medi.link.v1.services.UserService;
-import hangouh.me.medi.link.v1.utils.RequestUtil;
+import hangouh.me.medi.link.v1.services.DoctorService;
+import hangouh.me.medi.link.v1.utils.ResponseUtil;
 import jakarta.validation.Valid;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,89 +17,39 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @V1ApiController
 public class DoctorController {
-  public static final String DOCTOR_NOT_FOUND = "Doctor not found";
-  private final DoctorRepository doctorRepository;
-  private final UserService userService;
+  private final DoctorService doctorService;
 
   @Autowired
-  public DoctorController(DoctorRepository doctorRepository, UserService userService) {
-    this.doctorRepository = doctorRepository;
-    this.userService = userService;
+  public DoctorController(DoctorService doctorService) {
+    this.doctorService = doctorService;
   }
 
   @GetMapping("/doctors")
   public ResponseEntity<ResponsePageDTO<Doctor>> getAllDoctors(@Valid DoctorFilterDTO dto) {
-    Sort sort = RequestUtil.buildSort(dto.getSortBy());
-    Pageable pageable = PageRequest.of(dto.getPage(), dto.getSize(), sort);
-    Page<Doctor> doctors = doctorRepository.findByFilters(dto, pageable);
-    return ResponseEntity.ok(new ResponsePageDTO<>(HttpStatus.OK, "", doctors));
+    return ResponseUtil.createResponsePage(doctorService.getAll(dto), HttpStatus.OK);
   }
 
   @GetMapping("/doctors/{id}")
   public ResponseEntity<ResponseDTO<Doctor>> getDoctorById(@PathVariable UUID id) {
-    return doctorRepository
-        .findById(id)
-        .map(
-            doctor ->
-                new ResponseEntity<>(new ResponseDTO<>(HttpStatus.OK, "", doctor), HttpStatus.OK))
-        .orElseGet(
-            () ->
-                new ResponseEntity<>(
-                    new ResponseDTO<>(HttpStatus.NOT_FOUND, DOCTOR_NOT_FOUND, null),
-                    HttpStatus.NOT_FOUND));
+    Doctor response = doctorService.getById(id);
+    return ResponseUtil.createResponseEntity(response, HttpStatus.OK);
   }
 
   @PostMapping("/doctors")
   public ResponseEntity<ResponseDTO<Doctor>> createDoctor(
       @Valid @RequestBody DoctorBodyDTO doctorDTO) {
-    Doctor doctor = doctorDTO.toDoctor();
-    if (doctorDTO.getUser() != null) {
-      doctor.setUser(this.userService.upserUser(doctorDTO.getUser(), null));
-    }
-    Doctor savedDoctor = doctorRepository.save(doctor);
-    return new ResponseEntity<>(
-        new ResponseDTO<>(HttpStatus.CREATED, "", savedDoctor), HttpStatus.CREATED);
+    return ResponseUtil.createResponseEntity(doctorService.create(doctorDTO), HttpStatus.CREATED);
   }
 
   @PutMapping("/doctors/{id}")
   public ResponseEntity<ResponseDTO<Doctor>> updateDoctor(
       @PathVariable UUID id, @Valid @RequestBody DoctorBodyDTO doctorDTO) {
-    return doctorRepository
-        .findById(id)
-        .map(
-            doctor -> {
-              doctor.setName(doctorDTO.getName());
-              doctor.setSpecialty(doctorDTO.getSpecialty());
-              doctor.setContactInfo(doctorDTO.getContactInfo());
-              if (doctorDTO.getUser() != null && doctor.getUser() != null) {
-                doctor.setUser(
-                    this.userService.upserUser(doctorDTO.getUser(), doctor.getUser().getUserId()));
-              }
-              Doctor updatedDoctor = doctorRepository.save(doctor);
-              return new ResponseEntity<>(
-                  new ResponseDTO<>(HttpStatus.OK, "", updatedDoctor), HttpStatus.OK);
-            })
-        .orElseGet(
-            () ->
-                new ResponseEntity<>(
-                    new ResponseDTO<>(HttpStatus.NOT_FOUND, DOCTOR_NOT_FOUND, null),
-                    HttpStatus.NOT_FOUND));
+    return ResponseUtil.createResponseEntity(doctorService.update(id, doctorDTO), HttpStatus.OK);
   }
 
   @DeleteMapping("/doctors/{id}")
   public ResponseEntity<ResponseDTO<Void>> deleteDoctor(@PathVariable UUID id) {
-    return doctorRepository
-        .findById(id)
-        .map(
-            doctor -> {
-              doctorRepository.delete(doctor);
-              return new ResponseEntity<>(
-                  new ResponseDTO<Void>(HttpStatus.NO_CONTENT, "", null), HttpStatus.NO_CONTENT);
-            })
-        .orElseGet(
-            () ->
-                new ResponseEntity<>(
-                    new ResponseDTO<>(HttpStatus.NOT_FOUND, DOCTOR_NOT_FOUND, null),
-                    HttpStatus.NOT_FOUND));
+    doctorService.delete(id);
+    return ResponseUtil.createResponseEntity(null, HttpStatus.NO_CONTENT);
   }
 }

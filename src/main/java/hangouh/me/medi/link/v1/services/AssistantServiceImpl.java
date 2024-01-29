@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AssistantServiceImpl implements AssistantService {
-  private static final String NOT_FOUND = "Patient not found with id: %s";
+  private static final String NOT_FOUND = "Assistant not found with id: %s";
   private final AssistantRepository assistantRepository;
   private final UserService userService;
 
