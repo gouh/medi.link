@@ -1,6 +1,6 @@
 package hangouh.me.medi.link.v1.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +20,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Entity
 @Table(name = "appointment")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "appointmentId")
 public class Appointment {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,17 +45,20 @@ public class Appointment {
 
   @ManyToOne()
   @JoinColumn(name = "patient_id")
-  @JsonBackReference
+  @JsonManagedReference
+  @JsonIgnoreProperties(value = {"prescriptions", "appointments", "medicalHistory", "user"})
   private Patient patient;
 
   @ManyToOne()
   @JoinColumn(name = "doctor_id")
-  @JsonBackReference
+  @JsonManagedReference
+  @JsonIgnoreProperties(value = {"prescriptions", "appointments", "user"})
   private Doctor doctor;
 
   @ManyToOne()
   @JoinColumn(name = "assistant_id")
-  @JsonBackReference
+  @JsonManagedReference
+  @JsonIgnoreProperties(value = {"appointments", "user"})
   private Assistant assistant;
 
   public void setPatient(Patient patient) {
